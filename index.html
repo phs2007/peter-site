@@ -435,7 +435,7 @@
 
     <section class="hero" aria-labelledby="nome">
         <div class="avatar">
-          <img src="Icones/profile.png" alt="Foto de Peter">
+          <img src="./Icones/profile.png?v=2" alt="Foto de Peter" width="1280" height="1280">
         </div>
       <div>
         <p class="eyebrow">bem-vindo ao meu cantinho</p>
@@ -522,7 +522,9 @@
         </div>
         <p class="audio-note" id="audio-status">Música configurada automaticamente. <label for="audio-file">Carregue um arquivo de áudio</label> do seu computador para escolher a sua própria.</p>
         <input id="audio-file" type="file" accept="audio/*">
-        <audio id="audio" preload="metadata" src="musicas/track.mp3"></audio>
+        <audio id="audio" preload="metadata">
+          <source src="./musicas/track.mp3?v=2" type="audio/mpeg">
+        </audio>
       </section>
     </div>
 
@@ -587,22 +589,31 @@
       setInterval(updateClock, 1000);
 
       audio.volume = Number(volume.value);
+      audio.load();
       volume.addEventListener("input", () => { audio.volume = Number(volume.value); });
       playButton.addEventListener("click", async () => {
-        if (!audio.src) {
+        if (!audio.currentSrc) {
           showToast("Primeiro carregue uma faixa de áudio local.");
           audioFile.click();
           return;
         }
         if (audio.paused) {
-          await audio.play();
-          playButton.textContent = "Ⅱ";
-          playButton.setAttribute("aria-label", "Pausar áudio");
+          try {
+            await audio.play();
+            playButton.textContent = "Ⅱ";
+            playButton.setAttribute("aria-label", "Pausar áudio");
+          } catch {
+            audioStatus.textContent = "O navegador não conseguiu reproduzir esta faixa. Verifique o volume e tente novamente.";
+            showToast("Não foi possível reproduzir o áudio.");
+          }
         } else {
           audio.pause();
           playButton.textContent = "▶";
           playButton.setAttribute("aria-label", "Reproduzir áudio");
         }
+      });
+      audio.addEventListener("canplay", () => {
+        audioStatus.textContent = "Música pronta para tocar. Clique no botão play.";
       });
       audio.addEventListener("ended", () => {
         playButton.textContent = "▶";
