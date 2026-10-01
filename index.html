@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070908">
+  <meta name="description" content="Página pessoal de Peter.">
+  <title>Peter — Something Meaningful</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #070908;
+      --panel: rgba(15, 22, 18, .86);
+      --panel-soft: rgba(18, 29, 23, .7);
+      --text: #f3f5ed;
+      --muted: #a5b0a5;
+      --green: #214e39;
+      --green-bright: #65e398;
+      --blue: #182f52;
+      --blue-bright: #72a9ff;
+      --line: rgba(188, 255, 211, .17);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .46);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html.is-loading { overflow: hidden; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 8%, rgba(34, 103, 70, .18), transparent 27rem),
+        radial-gradient(circle at 88% 24%, rgba(41, 77, 142, .18), transparent 24rem),
+        var(--bg);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    body.is-ready .page { opacity: 1; transform: none; }
+    .page {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    body::before {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      opacity: .13;
+      pointer-events: none;
+      content: "";
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .skip-link {
+      position: fixed;
+      top: -4rem;
+      left: 1rem;
+      z-index: 20;
+      padding: .7rem 1rem;
+      color: var(--bg);
+      background: var(--green-bright);
+      border-radius: 999px;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .page {
+      width: min(100% - 2rem, 920px);
+      margin: 0 auto;
+      padding: 2rem 0 4rem;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .topbar-mark { color: var(--green-bright); }
+    .topbar-time { opacity: .75; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 1.4rem;
+      padding: clamp(1.4rem, 4vw, 2.5rem);
+      background: linear-gradient(140deg, rgba(28, 58, 40, .75), rgba(10, 14, 11, .86) 54%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      position: absolute;
+      right: -3rem;
+      bottom: -5rem;
+      width: 16rem;
+      height: 16rem;
+      border: 1px solid rgba(114, 169, 255, .18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2rem rgba(114, 169, 255, .04), 0 0 0 4rem rgba(114, 169, 255, .03);
+      content: "";
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 150px;
+      aspect-ratio: 1;
+      position: relative;
+      color: #b9ffd3;
+      background: #0b1710;
+      border: 1px solid rgba(101, 227, 152, .45);
+      border-radius: 50%;
+      box-shadow: 0 0 0 9px rgba(101, 227, 152, .05), 0 0 35px rgba(101, 227, 152, .14);
+      font-family: Georgia, serif;
+      font-size: 4rem;
+      user-select: none;
+    }
+
+    .avatar::before, .avatar::after {
+      position: absolute;
+      color: rgba(101, 227, 152, .32);
+      font-size: 1rem;
+      content: "✦";
+    }
+    .avatar::before { top: 1.1rem; left: 1.5rem; }
+    .avatar::after { right: 1.5rem; bottom: 1.1rem; color: rgba(114, 169, 255, .42); }
+
+    .eyebrow {
+      margin: 0 0 .35rem;
+      color: var(--green-bright);
+      font-family: "DM Mono", monospace;
+      font-size: .73rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, p { margin-top: 0; }
+    h1 {
+      margin-bottom: .15rem;
+      font-family: Caveat, cursive;
+      font-size: clamp(3.2rem, 9vw, 5.4rem);
+      font-weight: 600;
+      line-height: .95;
+      letter-spacing: -.03em;
+    }
+
+    .pronouns {
+      display: inline-block;
+      margin: 0 0 1rem;
+      padding: .18rem .55rem;
+      color: var(--blue-bright);
+      border: 1px solid rgba(114, 169, 255, .3);
+      border-radius: 999px;
+      font-family: "DM Mono", monospace;
+      font-size: .7rem;
+    }
+
+    .bio {
+      max-width: 55ch;
+      margin-bottom: 0;
+      color: #d0d8cf;
+      font-size: .98rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 1.4rem;
+    }
+
+    .card {
+      padding: 1.35rem;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .2);
+      backdrop-filter: blur(12px);
+      contain: layout paint;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1), border-color .25s ease;
+    }
+    .card.is-visible { opacity: 1; transform: none; }
+    .card:hover { border-color: rgba(188, 255, 211, .28); }
+    .card:nth-child(2) { transition-delay: .08s; }
+    .card:nth-child(3) { transition-delay: .16s; }
+    .card:nth-child(4) { transition-delay: .24s; }
+    .card.wide { grid-column: 1 / -1; }
+    .card-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+    h2 {
+      margin-bottom: 0;
+      font-size: 1rem;
+      letter-spacing: .02em;
+    }
+    .card-heading small {
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: .65rem;
+      text-transform: uppercase;
+    }
+
+    .links { display: grid; gap: .65rem; }
+    .link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .8rem .9rem;
+      color: var(--text);
+      text-decoration: none;
+      background: rgba(36, 69, 49, .28);
+      border: 1px solid transparent;
+      border-radius: 13px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .link:hover, .link:focus-visible {
+      background: rgba(55, 113, 76, .35);
+      border-color: rgba(101, 227, 152, .45);
+      transform: translateX(5px);
+    }
+    .link-name { display: flex; align-items: center; gap: .7rem; }
+    .link-icon { width: 1.4rem; color: var(--green-bright); text-align: center; }
+    .arrow { color: var(--muted); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: .55rem; }
+    .tag {
+      padding: .42rem .68rem;
+      color: #dce7df;
+      background: rgba(24, 47, 82, .48);
+      border: 1px solid rgba(114, 169, 255, .2);
+      border-radius: 999px;
+      font-size: .82rem;
+    }
+    .tag.green {
+      background: rgba(33, 78, 57, .48);
+      border-color: rgba(101, 227, 152, .22);
+    }
+
+    .recommendations {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .8rem;
+    }
+    .recommendation {
+      min-height: 125px;
+      padding: .9rem;
+      background: linear-gradient(145deg, rgba(27, 52, 84, .58), rgba(17, 29, 21, .6));
+      border: 1px solid rgba(114, 169, 255, .17);
+      border-radius: 16px;
+    }
+    .recommendation:nth-child(2) { background: linear-gradient(145deg, rgba(42, 72, 43, .58), rgba(17, 29, 21, .6)); }
+    .recommendation:nth-child(3) { background: linear-gradient(145deg, rgba(69, 42, 75, .45), rgba(17, 29, 21, .6)); }
+    .recommendation-label {
+      display: block;
+      margin-bottom: .6rem;
+      color: var(--green-bright);
+      font-family: "DM Mono", monospace;
+      font-size: .63rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .recommendation strong { display: block; margin-bottom: .25rem; }
+    .recommendation span { color: var(--muted); font-size: .8rem; }
+
+    .player {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .9rem;
+      padding: .8rem;
+      background: rgba(0, 0, 0, .25);
+      border-radius: 15px;
+    }
+    .play {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: var(--bg);
+      background: var(--green-bright);
+      border: 0;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+    .track-title { margin: 0; font-weight: 600; }
+    .track-meta { margin: .1rem 0 0; color: var(--muted); font-size: .72rem; }
+    .volume { width: 80px; accent-color: var(--green-bright); }
+    .audio-note { margin: .7rem 0 0; color: var(--muted); font-size: .72rem; }
+    .audio-note label { color: var(--blue-bright); text-decoration: underline; cursor: pointer; }
+    #audio-file { display: none; }
+
+    .marquee {
+      margin: 1.4rem 0;
+      padding: .5rem 0;
+      color: var(--green-bright);
+      border-top: 1px dashed rgba(101, 227, 152, .3);
+      border-bottom: 1px dashed rgba(101, 227, 152, .3);
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: "DM Mono", monospace;
+      font-size: .7rem;
+      text-transform: uppercase;
+    }
+    .marquee span { display: inline-block; min-width: 100%; animation: slide 20s linear infinite; }
+    @keyframes slide { to { transform: translateX(-100%); } }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.4rem;
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: .68rem;
+    }
+    footer button {
+      padding: 0;
+      color: var(--green-bright);
+      background: none;
+      border: 0;
+      text-decoration: underline;
+    }
+
+    .sticker {
+      position: fixed;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      color: var(--bg);
+      background: var(--green-bright);
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      box-shadow: 0 8px 25px rgba(0,0,0,.4);
+      font-size: 1.3rem;
+      transform: rotate(-12deg);
+      animation: float 4s ease-in-out infinite;
+      user-select: none;
+    }
+    .sticker.one { top: 19%; left: max(1rem, calc(50% - 540px)); }
+    .sticker.two { right: max(1rem, calc(50% - 540px)); bottom: 18%; color: white; background: var(--blue-bright); transform: rotate(12deg); animation-delay: -1.4s; }
+    @keyframes float { 50% { margin-top: -9px; } }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.3rem;
+      z-index: 10;
+      max-width: calc(100% - 2rem);
+      padding: .75rem 1rem;
+      color: var(--text);
+      background: #16251b;
+      border: 1px solid rgba(101, 227, 152, .45);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 1rem);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .glitch { animation: glitch .3s steps(2, end) 1; }
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      25% { transform: translate(2px, -1px); text-shadow: -2px 0 var(--blue-bright); }
+      75% { transform: translate(-2px, 1px); text-shadow: 2px 0 var(--green-bright); }
+    }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 1rem, 560px); padding-top: 1rem; }
+      .topbar { margin-bottom: 1.3rem; }
+      .hero { grid-template-columns: 1fr; gap: 1.2rem; text-align: center; }
+      .avatar { width: 116px; margin: 0 auto; font-size: 3rem; }
+      .bio { margin-right: auto; margin-left: auto; }
+      .grid { grid-template-columns: 1fr; }
+      .card.wide { grid-column: auto; }
+      .recommendations { grid-template-columns: 1fr; }
+      .sticker { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .page, .card { opacity: 1 !important; transform: none !important; }
+    }
+    .avatar {
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="sticker one" aria-hidden="true">✦</div>
+  <div class="sticker two" aria-hidden="true">☾</div>
+
+  <main class="page" id="conteudo">
+    <div class="topbar">
+      <span class="topbar-mark">✦ peter.exe</span>
+      <span class="topbar-time" id="clock">carregando...</span>
+    </div>
+
+    <section class="hero" aria-labelledby="nome">
+        <div class="avatar">
+          <img src="Icones/profile.png" alt="Foto de Peter">
+        </div>
+      <div>
+        <p class="eyebrow">bem-vindo ao meu cantinho</p>
+        <h1 id="nome">Peter/Pedro</h1>
+        <span class="pronouns">ele/dele</span>
+        <p class="bio">Me chamo Peter, não sei muito o que falar sobre mim, então será uma introdução bem curta. Sou uma pessoa mais introvertida, procrastinadora e bem na minha, porém sou animado quando já pego um certo nível de intimidade com a pessoa. Eu sou inclusivo, gosto de fazer piadas (às vezes de mau modo, mas me arrependo) e sou impulsivo às vezes.</p>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true"><span>✦ stay kind · stay strange · um pouco de caos, um pouco de graça · stay kind · stay strange · um pouco de caos, um pouco de graça · </span></div>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="links-title">
+        <div class="card-heading">
+          <h2 id="links-title">me encontre por aí</h2>
+          <small>links // 001</small>
+        </div>
+        <nav class="links" aria-label="Links pessoais">
+          <a class="link" href="https://www.instagram.com/choco777pizza/" target="_blank" rel="noopener noreferrer">
+            <span class="link-name"><span class="link-icon">◎</span> Instagram</span><span class="arrow">↗</span>
+          </a>
+          <a class="link" href="https://open.spotify.com/user/31gu33mmgvkpnukejhex7jbiifsm?si=d490bc12904a48ea" target="_blank" rel="noopener noreferrer">
+            <span class="link-name"><span class="link-icon">♫</span> Spotify</span><span class="arrow">↗</span>
+          </a>
+        </nav>
+      </section>
+
+      <section class="card" aria-labelledby="interesses-title">
+        <div class="card-heading">
+          <h2 id="interesses-title">um pouco sobre mim</h2>
+          <small>status // 002</small>
+        </div>
+        <div class="tags">
+          <span class="tag green">introvertido</span>
+          <span class="tag">procrastinador</span>
+          <span class="tag green">inclusivo</span>
+          <span class="tag">humor duvidoso</span>
+          <span class="tag green">impulsivo</span>
+          <span class="tag">online às vezes</span>
+          <span class="tag green">programador</span>
+          <span class="tag">animado</span>
+          <span class="tag green">falante</span>
+          <span class="tag">tranquilo</span>
+          <span class="tag green">brainrotted</span>
+        </div>
+      </section>
+
+      <section class="card wide" aria-labelledby="recs-title">
+        <div class="card-heading">
+          <h2 id="recs-title">recomendações</h2>
+          <small>favoritos // 003</small>
+        </div>
+        <div class="recommendations">
+          <article class="recommendation">
+            <span class="recommendation-label">♫ música</span>
+            <strong>Hikari - Nujabes (feat. Substantial)</strong>
+            <span>Uma música que combina com seu momento.</span>
+          </article>
+          <article class="recommendation">
+            <span class="recommendation-label">✦ anime</span>
+            <strong>Gurren Lagann (Obrigado Tutu)</strong>
+            <span>Seu anime favorito ou uma descoberta recente.</span>
+          </article>
+          <article class="recommendation">
+            <span class="recommendation-label">▣ filme</span>
+            <strong>Superman (2025)</strong>
+            <span>Um filme para recomendar sem pensar duas vezes.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="card wide" aria-labelledby="player-title">
+        <div class="card-heading">
+          <h2 id="player-title">faixa atual</h2>
+          <small>player // 004</small>
+        </div>
+        <div class="player">
+          <button class="play" id="play-button" type="button" aria-label="Reproduzir áudio">▶</button>
+          <div>
+              <p class="track-title" id="track-title">Nujabes - Luv(sic) Part 5</p>
+              <p class="track-meta" id="track-meta">Nujabes</p>
+          </div>
+          <input class="volume" id="volume" type="range" min="0" max="1" step=".05" value=".7" aria-label="Volume">
+        </div>
+        <p class="audio-note" id="audio-status">Música configurada automaticamente. <label for="audio-file">Carregue um arquivo de áudio</label> do seu computador para escolher a sua própria.</p>
+        <input id="audio-file" type="file" accept="audio/*">
+        <audio id="audio" preload="metadata" src="musicas/track.mp3"></audio>
+      </section>
+    </div>
+
+    <footer>
+      <span>feito com intenção + um pouco de caos</span>
+      <button id="secret-button" type="button">não clique aqui</button>
+    </footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      document.documentElement.classList.add("is-loading");
+      requestAnimationFrame(() => {
+        document.body.classList.add("is-ready");
+        document.documentElement.classList.remove("is-loading");
+      });
+
+      const clock = document.querySelector("#clock");
+      const toast = document.querySelector("#toast");
+      const audio = document.querySelector("#audio");
+      const playButton = document.querySelector("#play-button");
+      const volume = document.querySelector("#volume");
+      const audioFile = document.querySelector("#audio-file");
+      const trackTitle = document.querySelector("#track-title");
+      const trackMeta = document.querySelector("#track-meta");
+      const audioStatus = document.querySelector("#audio-status");
+      const secretButton = document.querySelector("#secret-button");
+      let toastTimer;
+
+      const revealCards = () => {
+        const cards = document.querySelectorAll(".card");
+        if (!("IntersectionObserver" in window)) {
+          cards.forEach((card) => card.classList.add("is-visible"));
+          return;
+        }
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            currentObserver.unobserve(entry.target);
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: .08 });
+        cards.forEach((card) => observer.observe(card));
+      };
+      revealCards();
+
+      const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+      };
+
+      const updateClock = () => {
+        clock.textContent = new Intl.DateTimeFormat("pt-BR", {
+          dateStyle: "short",
+          timeStyle: "medium"
+        }).format(new Date());
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      audio.volume = Number(volume.value);
+      volume.addEventListener("input", () => { audio.volume = Number(volume.value); });
+      playButton.addEventListener("click", async () => {
+        if (!audio.src) {
+          showToast("Primeiro carregue uma faixa de áudio local.");
+          audioFile.click();
+          return;
+        }
+        if (audio.paused) {
+          await audio.play();
+          playButton.textContent = "Ⅱ";
+          playButton.setAttribute("aria-label", "Pausar áudio");
+        } else {
+          audio.pause();
+          playButton.textContent = "▶";
+          playButton.setAttribute("aria-label", "Reproduzir áudio");
+        }
+      });
+      audio.addEventListener("ended", () => {
+        playButton.textContent = "▶";
+        playButton.setAttribute("aria-label", "Reproduzir áudio");
+      });
+      audio.addEventListener("error", () => {
+        trackMeta.textContent = "arquivo de áudio não encontrado";
+        audioStatus.textContent = "Não foi possível carregar a música. Confira se o arquivo musicas/track.mp3 foi enviado ao repositório.";
+        showToast("O arquivo de áudio não foi encontrado.");
+      });
+
+      audioFile.addEventListener("change", () => {
+        const file = audioFile.files[0];
+        if (!file) return;
+        audio.src = URL.createObjectURL(file);
+        trackTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+        trackMeta.textContent = "arquivo local • pronto para tocar";
+        showToast("Faixa carregada. Aperte play quando quiser.");
+      });
+
+      secretButton.addEventListener("click", () => {
+        document.querySelector("h1").classList.remove("glitch");
+        void document.querySelector("h1").offsetWidth;
+        document.querySelector("h1").classList.add("glitch");
+        showToast("Você encontrou o easter egg. Que a paz esteja com você ✦");
+      });
+
+      let typed = "";
+      document.addEventListener("keydown", (event) => {
+        typed = (typed + event.key.toLowerCase()).slice(-5);
+        if (typed === "amen") showToast("✝ segredo desbloqueado: amém.");
+      });
+    })();
+  </script>
+</body>
+</html>
